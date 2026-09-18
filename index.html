@@ -1,2 +1,699 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Simulador Tekoa Airbnb</title></head><body><h1>Simulador Tekoa Airbnb</h1><p>Arquivo publicado.</p></body></html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vale a pena? — Simulador Tekoá, Praia do Francês</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand:#EFEAE0;
+    --sand-2:#E2DAC5;
+    --panel:#FFFFFF;
+    --ink:#132625;
+    --ink-soft:#4B5C58;
+    --reef:#124B45;
+    --reef-2:#1C6E64;
+    --gold:#B87F26;
+    --coral:#B24E3F;
+    --line:#D3C9AE;
+    --focus:#1C6E64;
+    --font-serif:'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-sans:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --sand:#0E1F1D;
+      --sand-2:#152E2A;
+      --panel:#123230;
+      --ink:#EDE7D8;
+      --ink-soft:#AFC0BB;
+      --reef:#4FA593;
+      --reef-2:#6FBFAE;
+      --gold:#E0A94A;
+      --coral:#E28576;
+      --line:#28453F;
+      --focus:#6FBFAE;
+    }
+  }
+  :root[data-theme="dark"]{
+    --sand:#0E1F1D;
+    --sand-2:#152E2A;
+    --panel:#123230;
+    --ink:#EDE7D8;
+    --ink-soft:#AFC0BB;
+    --reef:#4FA593;
+    --reef-2:#6FBFAE;
+    --gold:#E0A94A;
+    --coral:#E28576;
+    --line:#28453F;
+    --focus:#6FBFAE;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--sand);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--reef-2);}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+
+  .hero{
+    background:var(--reef);
+    color:#F5F1E4;
+    padding:2.6rem 1.5rem 3.4rem;
+  }
+  .hero-inner{
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-size:0.85rem;
+    color:#CFE4DE;
+    margin:0 0 0.4rem;
+  }
+  .hero h1{
+    font-family:var(--font-serif);
+    font-weight:600;
+    font-size:clamp(2rem, 4.5vw, 3rem);
+    margin:0 0 0.5rem;
+    letter-spacing:-0.01em;
+  }
+  .hero p.sub{
+    max-width:46em;
+    color:#DCEDE7;
+    font-size:1.05rem;
+    margin:0 0 1.8rem;
+  }
+  .hero-numbers{
+    display:flex;
+    flex-wrap:wrap;
+    gap:2.2rem;
+  }
+  .hero-num .label{
+    font-size:0.85rem;
+    color:#BFDAD2;
+  }
+  .hero-num .value{
+    font-family:var(--font-serif);
+    font-size:clamp(1.8rem, 4vw, 2.6rem);
+    font-weight:600;
+    color:#fff;
+    transition:opacity 0.15s ease;
+  }
+  .hero-num .value.coral{ color:#F3B7AA; }
+
+  main{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 1.5rem 4rem;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:2.5rem;
+    margin-top:-1.6rem;
+  }
+  @media (max-width: 860px){
+    .layout{grid-template-columns:1fr;}
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+
+  .inputs-card{
+    padding:1.6rem 1.7rem 0.6rem;
+  }
+  fieldset{
+    border:none;
+    margin:0 0 1.6rem;
+    padding:0 0 1.5rem;
+    border-bottom:1px solid var(--line);
+  }
+  fieldset:last-of-type{ border-bottom:none; }
+  legend{
+    font-family:var(--font-serif);
+    font-size:1.15rem;
+    font-weight:600;
+    padding:0;
+    margin-bottom:0.9rem;
+    color:var(--reef);
+  }
+  .field-row{
+    display:grid;
+    grid-template-columns:1fr 130px;
+    gap:0.8rem;
+    align-items:center;
+    margin-bottom:0.7rem;
+  }
+  .field-row label{
+    font-size:0.92rem;
+    color:var(--ink);
+  }
+  .field-row .hint{
+    display:block;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin-top:0.15rem;
+  }
+  .field-row input[type=number]{
+    width:100%;
+    padding:0.45rem 0.6rem;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--sand);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:0.95rem;
+    text-align:right;
+  }
+  .field-row input[type=number]:focus{
+    background:var(--panel);
+  }
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+    margin-bottom:1rem;
+  }
+  .toggle-row input{ width:18px; height:18px; }
+  .financing-fields{ display:none; }
+  .financing-fields.show{ display:block; }
+
+  .results-card{
+    padding:1.6rem 1.7rem 1.8rem;
+    position:sticky;
+    top:1.2rem;
+    align-self:start;
+  }
+  @media (max-width:860px){
+    .results-card{ position:static; }
+  }
+  .results-card h2{
+    font-family:var(--font-serif);
+    font-size:1.25rem;
+    margin:0 0 1rem;
+    color:var(--reef);
+  }
+  .result-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:0.45rem 0;
+    border-bottom:1px dashed var(--line);
+    font-size:0.94rem;
+  }
+  .result-line:last-of-type{ border-bottom:none; }
+  .result-line .num{
+    font-weight:600;
+    font-variant-numeric:tabular-nums;
+  }
+  .result-line.big{
+    padding:0.7rem 0;
+  }
+  .result-line.big .num{
+    font-family:var(--font-serif);
+    font-size:1.5rem;
+    color:var(--gold);
+  }
+  .result-line.big .num.coral{ color:var(--coral); }
+
+  .breakdown{
+    margin:0.3rem 0 1.1rem;
+    padding-left:0;
+    list-style:none;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+  }
+  .breakdown li{
+    display:flex;
+    justify-content:space-between;
+    padding:0.15rem 0;
+  }
+
+  .compare{
+    margin-top:0.6rem;
+  }
+  .bar-row{ margin-bottom:0.7rem; }
+  .bar-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.85rem;
+    margin-bottom:0.25rem;
+  }
+  .bar-track{
+    height:10px;
+    background:var(--sand-2);
+    border-radius:5px;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    border-radius:5px;
+    transition:width 0.4s ease;
+  }
+  .bar-fill.reef{ background:var(--reef-2); }
+  .bar-fill.gold{ background:var(--gold); }
+
+  table.scenarios{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.85rem;
+    margin-top:0.8rem;
+  }
+  table.scenarios th, table.scenarios td{
+    text-align:right;
+    padding:0.4rem 0.3rem;
+    border-bottom:1px solid var(--line);
+  }
+  table.scenarios th:first-child, table.scenarios td:first-child{
+    text-align:left;
+  }
+  table.scenarios thead th{
+    color:var(--ink-soft);
+    font-weight:500;
+    font-size:0.78rem;
+  }
+
+  .note{
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    margin-top:1rem;
+  }
+  .footer-note{
+    max-width:1080px;
+    margin:1.5rem auto 0;
+    padding:0 1.5rem 2rem;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+  }
+  .reset-btn{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    padding:0.4rem 0.8rem;
+    border-radius:6px;
+    font-size:0.8rem;
+    cursor:pointer;
+    margin:0.4rem 0 0.2rem;
+  }
+  .reset-btn:hover{ border-color:var(--reef-2); color:var(--reef-2); }
+
+  @keyframes pulse{
+    0%{ opacity:0.35; }
+    100%{ opacity:1; }
+  }
+  .pulse{ animation:pulse 0.35s ease; }
+
+  @media (prefers-reduced-motion: reduce){
+    .pulse{ animation:none; }
+    .bar-fill{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Simulador de investimento</p>
+    <h1>Vale a pena?</h1>
+    <p class="sub">Um modelo rápido para testar se o apartamento de ~50&nbsp;m² no Tekoá, Praia do Francês, se paga como Airbnb. Ajuste os números conforme você for confirmando preço, condomínio e desempenho real da região — os resultados recalculam na hora.</p>
+    <div class="hero-numbers">
+      <div class="hero-num">
+        <div class="label">Cap rate (retorno anual sobre o investido)</div>
+        <div class="value" id="heroCapRate">—</div>
+      </div>
+      <div class="hero-num">
+        <div class="label">Payback simples</div>
+        <div class="value" id="heroPayback">—</div>
+      </div>
+      <div class="hero-num">
+        <div class="label">Fluxo de caixa mensal</div>
+        <div class="value" id="heroCashflow">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="layout">
+    <form class="card inputs-card" id="calcForm" autocomplete="off">
+
+      <fieldset>
+        <legend>Compra</legend>
+        <div class="field-row">
+          <label for="preco">Preço de compra (R$)</label>
+          <input type="number" id="preco" value="630000" step="1000" min="0">
+        </div>
+        <div class="field-row">
+          <label for="area">Área privativa (m²)</label>
+          <input type="number" id="area" value="50" step="0.1" min="1">
+        </div>
+        <p class="hint" id="pricePerM2Hint">≈ R$ 0/m²</p>
+        <div class="field-row">
+          <label for="fechamentoPct">Custos de fechamento (%)<span class="hint">ITBI + escritura + registro</span></label>
+          <input type="number" id="fechamentoPct" value="4" step="0.1" min="0">
+        </div>
+        <div class="field-row">
+          <label for="mobilia">Mobília e decoração (R$)<span class="hint">enxoval completo para operar como temporada</span></label>
+          <input type="number" id="mobilia" value="45000" step="1000" min="0">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Operação como temporada</legend>
+        <div class="field-row">
+          <label for="adr">Diária média — ADR (R$)<span class="hint">confirme com anúncios comparáveis reais na Praia do Francês</span></label>
+          <input type="number" id="adr" value="320" step="5" min="0">
+        </div>
+        <div class="field-row">
+          <label for="ocupacaoPct">Taxa de ocupação anual (%)<span class="hint">média de Maceió fica perto de 34–35%; praia menor tende a ser mais sazonal</span></label>
+          <input type="number" id="ocupacaoPct" value="35" step="1" min="0" max="100">
+        </div>
+        <div class="field-row">
+          <label for="plataformaPct">Taxa da plataforma (%)<span class="hint">Airbnb/Booking sobre a receita</span></label>
+          <input type="number" id="plataformaPct" value="3" step="0.5" min="0">
+        </div>
+        <div class="field-row">
+          <label for="gestaoPct">Taxa de administração (%)<span class="hint">gestora de temporada local, sobre a receita</span></label>
+          <input type="number" id="gestaoPct" value="25" step="1" min="0">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Custos fixos</legend>
+        <div class="field-row">
+          <label for="condoMensal">Condomínio (R$/mês)<span class="hint">boutique de 45 unidades tende a ratear custo fixo mais alto por apê — peça o valor real</span></label>
+          <input type="number" id="condoMensal" value="650" step="10" min="0">
+        </div>
+        <div class="field-row">
+          <label for="iptuAnual">IPTU (R$/ano)</label>
+          <input type="number" id="iptuAnual" value="2000" step="50" min="0">
+        </div>
+        <div class="field-row">
+          <label for="seguroAnual">Seguro (R$/ano)</label>
+          <input type="number" id="seguroAnual" value="700" step="50" min="0">
+        </div>
+        <div class="field-row">
+          <label for="manutencaoPct">Reserva de manutenção (%)<span class="hint">sobre a receita bruta</span></label>
+          <input type="number" id="manutencaoPct" value="5" step="0.5" min="0">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Financiamento (opcional)</legend>
+        <div class="toggle-row">
+          <input type="checkbox" id="financiar">
+          <label for="financiar">Vou financiar parte da compra</label>
+        </div>
+        <div class="financing-fields" id="financingFields">
+          <div class="field-row">
+            <label for="valorFinanciado">Valor financiado (R$)</label>
+            <input type="number" id="valorFinanciado" value="440000" step="1000" min="0">
+          </div>
+          <div class="field-row">
+            <label for="jurosAnual">Juros do financiamento (% a.a.)</label>
+            <input type="number" id="jurosAnual" value="12" step="0.1" min="0">
+          </div>
+          <div class="field-row">
+            <label for="prazoAnos">Prazo (anos)</label>
+            <input type="number" id="prazoAnos" value="25" step="1" min="1">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Comparação</legend>
+        <div class="field-row">
+          <label for="selicPct">Selic/CDI atual (% a.a.)<span class="hint">referência de retorno sem risco e sem trabalho</span></label>
+          <input type="number" id="selicPct" value="14" step="0.25" min="0">
+        </div>
+        <button type="button" class="reset-btn" id="resetBtn">Redefinir para os valores padrão</button>
+      </fieldset>
+    </form>
+
+    <div class="card results-card">
+      <h2>Resultado</h2>
+
+      <div class="result-line">
+        <span>Investimento total</span>
+        <span class="num" id="rInvestimento">—</span>
+      </div>
+      <div class="result-line">
+        <span>Receita bruta anual</span>
+        <span class="num" id="rReceitaBruta">—</span>
+      </div>
+
+      <ul class="breakdown" id="rCustosBreakdown"></ul>
+
+      <div class="result-line">
+        <span>Resultado operacional (NOI) anual</span>
+        <span class="num" id="rNOI">—</span>
+      </div>
+      <div class="result-line big">
+        <span>Cap rate</span>
+        <span class="num" id="rCapRate">—</span>
+      </div>
+      <div class="result-line big">
+        <span>Payback simples</span>
+        <span class="num" id="rPayback">—</span>
+      </div>
+      <div class="result-line" id="cashOnCashRow" style="display:none;">
+        <span>Cash-on-cash (com financiamento)</span>
+        <span class="num" id="rCashOnCash">—</span>
+      </div>
+
+      <div class="compare">
+        <div class="bar-row">
+          <div class="bar-label"><span>Cap rate do imóvel</span><span id="barCapValue">—</span></div>
+          <div class="bar-track"><div class="bar-fill gold" id="barCap"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Selic/CDI (sem risco, líquido de trabalho)</span><span id="barSelicValue">—</span></div>
+          <div class="bar-track"><div class="bar-fill reef" id="barSelic"></div></div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:1.4rem; font-size:1.05rem;">Cenários de ocupação</h2>
+      <table class="scenarios">
+        <thead>
+          <tr><th>Cenário</th><th>Ocupação</th><th>NOI/ano</th><th>Cap rate</th></tr>
+        </thead>
+        <tbody id="scenarioBody"></tbody>
+      </table>
+
+      <p class="note">Não considera: valorização do imóvel, imposto de renda sobre o aluguel e meses de vacância na obra/decoração inicial. Use como apoio à decisão, não como recomendação financeira.</p>
+    </div>
+  </div>
+</main>
+
+<div class="footer-note">
+  Preço de compra padrão calculado a partir da faixa informada pela incorporadora (R$ 11.300–R$ 14.000/m²) para uma unidade de ~50 m². Ocupação e diária padrão partem de médias do mercado de Maceió (não específicas da Praia do Francês) — ajuste assim que tiver dados locais reais.
+</div>
+
+<script>
+(function(){
+  const ids = ['preco','area','fechamentoPct','mobilia','adr','ocupacaoPct','plataformaPct',
+    'gestaoPct','condoMensal','iptuAnual','seguroAnual','manutencaoPct','financiar',
+    'valorFinanciado','jurosAnual','prazoAnos','selicPct'];
+
+  const defaults = {
+    preco:630000, area:50, fechamentoPct:4, mobilia:45000, adr:320, ocupacaoPct:35,
+    plataformaPct:3, gestaoPct:25, condoMensal:650, iptuAnual:2000, seguroAnual:700,
+    manutencaoPct:5, financiar:false, valorFinanciado:440000, jurosAnual:12, prazoAnos:25, selicPct:14
+  };
+
+  const STORAGE_KEY = 'tekoa-airbnb-calc-v1';
+
+  function getEl(id){ return document.getElementById(id); }
+
+  function readInputs(){
+    const v = {};
+    ids.forEach(id=>{
+      const el = getEl(id);
+      if(!el) return;
+      v[id] = (el.type === 'checkbox') ? el.checked : parseFloat(el.value);
+    });
+    return v;
+  }
+
+  function applyInputs(v){
+    ids.forEach(id=>{
+      const el = getEl(id);
+      if(!el || v[id] === undefined) return;
+      if(el.type === 'checkbox'){ el.checked = !!v[id]; }
+      else { el.value = v[id]; }
+    });
+    getEl('financingFields').classList.toggle('show', !!v.financiar);
+  }
+
+  function saveState(v){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(v));
+    }catch(e){ /* storage unavailable, ignore */ }
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){ return null; }
+  }
+
+  const fmtBRL = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL', maximumFractionDigits:0});
+  const fmtPct = (n)=> (isFinite(n) ? n.toFixed(1).replace('.', ',') + '%' : '—');
+
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+  function computeScenario(base, ocupacaoFrac){
+    const receitaBruta = base.adr * 365 * ocupacaoFrac;
+    const receitaLiquidaPlataforma = receitaBruta * (1 - base.plataformaPct/100);
+    const custoGestao = receitaLiquidaPlataforma * (base.gestaoPct/100);
+    const condoAnual = base.condoMensal * 12;
+    const manutencao = receitaBruta * (base.manutencaoPct/100);
+    const custosOperacionais = custoGestao + condoAnual + base.iptuAnual + base.seguroAnual + manutencao;
+    const noi = receitaLiquidaPlataforma - custosOperacionais;
+    return {receitaBruta, receitaLiquidaPlataforma, custoGestao, condoAnual, manutencao, custosOperacionais, noi};
+  }
+
+  function calc(){
+    const v = readInputs();
+
+    const investimentoTotal = v.preco * (1 + v.fechamentoPct/100) + v.mobilia;
+    const precoPorM2 = v.area > 0 ? v.preco / v.area : 0;
+    getEl('pricePerM2Hint').textContent = '≈ ' + fmtBRL.format(precoPorM2) + '/m²';
+
+    const base = computeScenario(v, v.ocupacaoPct/100);
+    const capRate = investimentoTotal > 0 ? (base.noi / investimentoTotal) * 100 : 0;
+    const payback = base.noi > 0 ? investimentoTotal / base.noi : Infinity;
+
+    // financing
+    let fluxoCaixaAnual = base.noi;
+    let capitalProprio = investimentoTotal;
+    let cashOnCash = capRate;
+    let servicoDividaAnual = 0;
+
+    if(v.financiar){
+      const i = (v.jurosAnual/100) / 12;
+      const n = v.prazoAnos * 12;
+      let parcelaMensal = 0;
+      if(i > 0){
+        parcelaMensal = v.valorFinanciado * (i * Math.pow(1+i, n)) / (Math.pow(1+i, n) - 1);
+      } else if(n > 0){
+        parcelaMensal = v.valorFinanciado / n;
+      }
+      servicoDividaAnual = parcelaMensal * 12;
+      fluxoCaixaAnual = base.noi - servicoDividaAnual;
+      capitalProprio = Math.max(investimentoTotal - v.valorFinanciado, 1);
+      cashOnCash = (fluxoCaixaAnual / capitalProprio) * 100;
+    }
+
+    // render hero
+    getEl('heroCapRate').textContent = fmtPct(capRate);
+    getEl('heroCapRate').classList.toggle('coral', capRate < 0);
+    getEl('heroPayback').textContent = isFinite(payback) ? payback.toFixed(1) + ' anos' : '—';
+    getEl('heroCashflow').textContent = fmtBRL.format(fluxoCaixaAnual/12);
+    getEl('heroCashflow').classList.toggle('coral', fluxoCaixaAnual < 0);
+
+    // render results
+    getEl('rInvestimento').textContent = fmtBRL.format(investimentoTotal);
+    getEl('rReceitaBruta').textContent = fmtBRL.format(base.receitaBruta);
+
+    const breakdown = getEl('rCustosBreakdown');
+    breakdown.innerHTML = '';
+    const items = [
+      ['Taxa da plataforma', base.receitaBruta - base.receitaLiquidaPlataforma],
+      ['Administração/gestão', base.custoGestao],
+      ['Condomínio (12 meses)', base.condoAnual],
+      ['IPTU + seguro', v.iptuAnual + v.seguroAnual],
+      ['Manutenção/reserva', base.manutencao]
+    ];
+    items.forEach(([label, value])=>{
+      const li = document.createElement('li');
+      li.innerHTML = '<span>' + label + '</span><span>' + fmtBRL.format(value) + '</span>';
+      breakdown.appendChild(li);
+    });
+
+    getEl('rNOI').textContent = fmtBRL.format(base.noi);
+    getEl('rCapRate').textContent = fmtPct(capRate);
+    getEl('rCapRate').classList.toggle('coral', capRate < 0);
+    getEl('rPayback').textContent = isFinite(payback) ? payback.toFixed(1) + ' anos' : 'não se paga com esses números';
+    getEl('rPayback').classList.toggle('coral', !isFinite(payback) || payback < 0);
+
+    const cocRow = getEl('cashOnCashRow');
+    if(v.financiar){
+      cocRow.style.display = 'flex';
+      getEl('rCashOnCash').textContent = fmtPct(cashOnCash);
+    } else {
+      cocRow.style.display = 'none';
+    }
+
+    // comparison bars
+    const selic = v.selicPct;
+    const maxScale = Math.max(20, capRate, selic) + 4;
+    getEl('barCap').style.width = clamp01(Math.max(capRate,0)/maxScale)*100 + '%';
+    getEl('barSelic').style.width = clamp01(Math.max(selic,0)/maxScale)*100 + '%';
+    getEl('barCapValue').textContent = fmtPct(capRate);
+    getEl('barSelicValue').textContent = fmtPct(selic);
+
+    // scenarios
+    const scenarioBody = getEl('scenarioBody');
+    scenarioBody.innerHTML = '';
+    const baseOcc = v.ocupacaoPct/100;
+    const scenarios = [
+      ['Pessimista', clamp01(baseOcc - 0.10)],
+      ['Base', clamp01(baseOcc)],
+      ['Otimista', clamp01(baseOcc + 0.10)]
+    ];
+    scenarios.forEach(([label, occ])=>{
+      const s = computeScenario(v, occ);
+      const scCap = investimentoTotal > 0 ? (s.noi/investimentoTotal)*100 : 0;
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + label + '</td><td>' + (occ*100).toFixed(0) + '%</td><td>' +
+        fmtBRL.format(s.noi) + '</td><td>' + fmtPct(scCap) + '</td>';
+      scenarioBody.appendChild(tr);
+    });
+
+    saveState(v);
+  }
+
+  function pulseAndCalc(){
+    const panel = document.querySelector('.results-card');
+    panel.classList.remove('pulse');
+    void panel.offsetWidth;
+    panel.classList.add('pulse');
+    calc();
+  }
+
+  document.getElementById('calcForm').addEventListener('input', pulseAndCalc);
+
+  getEl('financiar').addEventListener('change', function(){
+    getEl('financingFields').classList.toggle('show', this.checked);
+    pulseAndCalc();
+  });
+
+  getEl('resetBtn').addEventListener('click', function(){
+    applyInputs(defaults);
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    calc();
+  });
+
+  // init
+  const saved = loadState();
+  applyInputs(saved || defaults);
+  calc();
+})();
+</script>
+
+</body>
+</html>
